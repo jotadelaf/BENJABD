@@ -1,20 +1,162 @@
-<form action="insertar.php" method="post">
-  <label for="nombre">Nombre:</label>
-  <input type="text" id="nombre" name="nombre" required><br><br>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Empleados</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Sistema de Empleados</h1>
+        
+        <!-- Navegación -->
+        <nav class="nav-tabs">
+            <button class="nav-btn active" onclick="showForm('registrar')">Registrar</button>
+            <button class="nav-btn" onclick="showForm('modificar')">Modificar</button>
+            <button class="nav-btn" onclick="showForm('eliminar')">Eliminar</button>
+            <button class="nav-btn" onclick="showForm('listar1')">Listar 1</button>
+            <button class="nav-btn" onclick="showForm('listar2')">Listar 2</button>
+        </nav>
 
-  <label for="apellido">Apellido:</label>
-  <input type="text" id="apellido" name="apellido" required><br><br>
+        <!-- Formulario Registrar Empleado -->
+        <div id="registrar" class="form-section active">
+            <h2>Registrar Empleado</h2>
+            <form action="insertar.php" method="post">
+                <div class="form-group">
+                    <label for="nombre">Nombre:</label>
+                    <input type="text" id="nombre" name="nombre" required>
+                </div>
 
-  <label for="sexo">Sexo:</label>
-  <select id="sexo" name="sexo" required>
-    <option value="">Seleccione</option>
-    <option value="Masculino">Masculino</option>
-    <option value="Femenino">Femenino</option>
-    <option value="Otro">Otro</option>
-  </select><br><br>
+                <div class="form-group">
+                    <label for="apellido">Apellido:</label>
+                    <input type="text" id="apellido" name="apellido" required>
+                </div>
 
-  <label for="sueldo">Sueldo:</label>
-  <input type="number" id="sueldo" name="sueldo" step="0.01" min="0" required><br><br>
+                <div class="form-group">
+                    <label for="sexo">Sexo:</label>
+                    <select id="sexo" name="sexo" required>
+                        <option value="">Seleccione</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
 
-  <input type="submit" value="Registrar">
-</form>
+                <div class="form-group">
+                    <label for="sueldo">Sueldo:</label>
+                    <input type="number" id="sueldo" name="sueldo" step="0.01" min="0" required>
+                </div>
+
+                <button type="submit" class="btn-submit">Registrar Empleado</button>
+            </form>
+        </div>
+
+        <!-- Formulario Modificar Empleado -->
+        <div id="modificar" class="form-section">
+            <h2>Modificar Empleado</h2>
+            <form action="actualizar.php" method="post">
+                <div class="form-group">
+                    <label for="campo_modificar">Campo a Modificar:</label>
+                    <select id="campo_modificar" name="campo_modificar" required>
+                        <option value="">Seleccione campo</option>
+                        <option value="nombre">Nombre</option>
+                        <option value="apellido">Apellido</option>
+                        <option value="sexo">Sexo</option>
+                        <option value="sueldo">Sueldo</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="nuevo_valor">Nuevo Valor:</label>
+                    <input type="text" id="nuevo_valor" name="nuevo_valor" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="condicion_campo">Condición (Campo):</label>
+                    <select id="condicion_campo" name="condicion_campo" required>
+                        <option value="">Seleccione campo</option>
+                        <option value="nombre">Nombre</option>
+                        <option value="apellido">Apellido</option>
+                        <option value="sexo">Sexo</option>
+                        <option value="sueldo">Sueldo</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="condicion_valor">Condición (Valor):</label>
+                    <input type="text" id="condicion_valor" name="condicion_valor" required>
+                </div>
+
+                <button type="submit" class="btn-submit">Modificar Empleado</button>
+            </form>
+        </div>
+
+        <!-- Formulario Eliminar Empleado -->
+        <div id="eliminar" class="form-section">
+            <h2>Eliminar Empleado</h2>
+            <form action="eliminar.php" method="post">
+                <div class="form-group">
+                    <label for="campo_eliminar">Campo de Condición:</label>
+                    <select id="campo_eliminar" name="campo_eliminar" required>
+                        <option value="">Seleccione campo</option>
+                        <option value="nombre">Nombre</option>
+                        <option value="apellido">Apellido</option>
+                        <option value="sexo">Sexo</option>
+                        <option value="sueldo">Sueldo</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="valor_eliminar">Valor de Condición:</label>
+                    <input type="text" id="valor_eliminar" name="valor_eliminar" required>
+                </div>
+
+                <button type="submit" class="btn-submit btn-danger">Eliminar Empleado</button>
+            </form>
+        </div>
+
+        <!-- Formulario Listar Empleados 1 -->
+        <div id="listar1" class="form-section">
+            <h2>Listar Empleados (Método 1)</h2>
+            <form action="listar1.php" method="post">
+                <button type="submit" class="btn-submit">Mostrar Todos los Empleados</button>
+            </form>
+        </div>
+
+        <!-- Formulario Listar Empleados 2 -->
+        <div id="listar2" class="form-section">
+            <h2>Listar Empleados (Método 2)</h2>
+            <form action="listar2.php" method="post">
+                <div class="form-group">
+                    <label for="filtro_sexo">Filtrar por Sexo:</label>
+                    <select id="filtro_sexo" name="filtro_sexo">
+                        <option value="">Todos</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Femenino">Femenino</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-submit">Mostrar Empleados Filtrados</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function showForm(formId) {
+            // Ocultar todos los formularios
+            const forms = document.querySelectorAll('.form-section');
+            forms.forEach(form => form.classList.remove('active'));
+            
+            // Mostrar el formulario seleccionado
+            document.getElementById(formId).classList.add('active');
+            
+            // Actualizar botones de navegación
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
