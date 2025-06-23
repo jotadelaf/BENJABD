@@ -128,4 +128,4 @@ BEGIN
         SET promedio_sueldo = 0.00;
     END IF;
 END $$
-DELIMITER ; 
+DELIMITER ;

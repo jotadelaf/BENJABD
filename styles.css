@@ -20,7 +20,7 @@ body {
     border-radius: 15px;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
     width: 100%;
-    max-width: 600px;
+    max-width: 1200px;
 }
 
 h1 {
@@ -60,7 +60,7 @@ h2 {
     font-weight: 500;
     transition: all 0.3s ease;
     flex: 1;
-    max-width: 120px;
+    max-width: 140px;
 }
 
 .nav-btn:hover {
@@ -80,6 +80,15 @@ h2 {
 }
 
 .form-section.active {
+    display: block;
+}
+
+/* Secciones de respaldo */
+.backup-section {
+    display: none;
+}
+
+.backup-section.active {
     display: block;
 }
 
@@ -212,10 +221,11 @@ select:focus {
 }
 
 /* Responsive design */
-@media (max-width: 600px) {
+@media (max-width: 1200px) {
     .container {
         padding: 20px;
         margin: 10px;
+        max-width: 95%;
     }
     
     h1 {
