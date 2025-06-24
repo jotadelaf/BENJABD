@@ -50,7 +50,7 @@
                     echo '<td>' . $fila['nombre'] . '</td>';
                     echo '<td>' . $fila['apellido'] . '</td>';
                     echo '<td>' . $fila['sexo'] . '</td>';
-                    echo '<td>$' . number_format($fila['sueldo'], 2) . '</td>';
+                    echo '<td>$ ' . number_format($fila['sueldo'], 0, ',', '.') . '</td>';
                     echo '</tr>';
                 }
                 

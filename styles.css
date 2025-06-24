@@ -167,15 +167,310 @@ select:focus {
     box-shadow: 0 2px 8px rgba(52, 73, 94, 0.3);
 }
 
+/* Estilos para botones de eliminar inspirados en Bootstrap */
 .btn-danger {
-    background: #e74c3c;
-    border-color: #c0392b;
-    box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+    background: #dc3545 !important;
+    border: 1px solid #bd2130 !important;
+    color: #ffffff !important;
+    padding: 8px 16px !important;
+    border-radius: 6px !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease-in-out !important;
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2) !important;
+    text-transform: none !important;
+    letter-spacing: 0.025em !important;
+    position: relative !important;
+    overflow: hidden !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 80px !important;
+    height: 32px !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    text-decoration: none !important;
+    outline: none !important;
 }
 
 .btn-danger:hover {
-    background: #c0392b;
-    box-shadow: 0 6px 16px rgba(231, 76, 60, 0.4);
+    background: #c82333 !important;
+    border-color: #a71e2a !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3) !important;
+}
+
+.btn-danger:active {
+    background: #a71e2a !important;
+    border-color: #8c1a23 !important;
+    transform: translateY(0) !important;
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2) !important;
+}
+
+.btn-danger:focus {
+    outline: 0 !important;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+/* Botón de eliminar moderno con icono */
+.btn-delete-modern {
+    background: linear-gradient(145deg, #dc3545, #c82333);
+    border: 1px solid #bd2130;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    box-shadow: 0 3px 6px rgba(220, 53, 69, 0.2);
+    text-transform: none;
+    letter-spacing: 0.025em;
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 100px;
+    height: 36px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.btn-delete-modern::before {
+    content: '🗑️';
+    font-size: 14px;
+    line-height: 1;
+}
+
+.btn-delete-modern::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.15), transparent);
+    opacity: 0;
+    transition: opacity 0.15s ease-in-out;
+}
+
+.btn-delete-modern:hover {
+    background: linear-gradient(145deg, #c82333, #a71e2a);
+    border-color: #a71e2a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(220, 53, 69, 0.3);
+}
+
+.btn-delete-modern:hover::after {
+    opacity: 1;
+}
+
+.btn-delete-modern:active {
+    background: linear-gradient(145deg, #a71e2a, #8c1a23);
+    border-color: #8c1a23;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(220, 53, 69, 0.2);
+}
+
+.btn-delete-modern:focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+/* Botón de eliminar outline (estilo Bootstrap outline) */
+.btn-outline-danger {
+    background: transparent;
+    border: 2px solid #dc3545;
+    color: #dc3545;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    text-transform: none;
+    letter-spacing: 0.025em;
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 80px;
+    height: 32px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.btn-outline-danger::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #dc3545;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.15s ease-in-out;
+    z-index: -1;
+}
+
+.btn-outline-danger:hover {
+    color: #ffffff;
+    border-color: #dc3545;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
+}
+
+.btn-outline-danger:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+.btn-outline-danger:active {
+    background: #dc3545;
+    border-color: #dc3545;
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
+}
+
+.btn-outline-danger:focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+/* Botón de eliminar con badge (estilo Bootstrap badge) */
+.btn-danger-badge {
+    background: linear-gradient(145deg, #dc3545, #c82333);
+    border: 1px solid #bd2130;
+    color: #ffffff;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
+    text-transform: none;
+    letter-spacing: 0.025em;
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 90px;
+    height: 32px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.btn-danger-badge::before {
+    content: '🗑️';
+    font-size: 12px;
+    line-height: 1;
+}
+
+.btn-danger-badge::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.15), transparent);
+    opacity: 0;
+    transition: opacity 0.15s ease-in-out;
+}
+
+.btn-danger-badge:hover {
+    background: linear-gradient(145deg, #c82333, #a71e2a);
+    border-color: #a71e2a;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+.btn-danger-badge:hover::after {
+    opacity: 1;
+}
+
+.btn-danger-badge:active {
+    background: linear-gradient(145deg, #a71e2a, #8c1a23);
+    border-color: #8c1a23;
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
+}
+
+.btn-danger-badge:focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+/* Botón de eliminar con loading state */
+.btn-danger.loading {
+    position: relative;
+    color: transparent;
+}
+
+.btn-danger.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border: 2px solid #ffffff;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Botón de eliminar con tooltip */
+.btn-danger-tooltip {
+    position: relative;
+}
+
+.btn-danger-tooltip::after {
+    content: 'Eliminar empleado';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #343a40;
+    color: #ffffff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.15s ease-in-out;
+    z-index: 1000;
+    margin-bottom: 5px;
+}
+
+.btn-danger-tooltip::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 4px solid transparent;
+    border-top-color: #343a40;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.15s ease-in-out;
+    z-index: 1000;
+    margin-bottom: 1px;
+}
+
+.btn-danger-tooltip:hover::after,
+.btn-danger-tooltip:hover::before {
+    opacity: 1;
+    visibility: visible;
 }
 
 .message {
@@ -372,26 +667,78 @@ select:focus {
     font-size: 14px;
 }
 
-.btn-eliminar {
-    background: #e74c3c;
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 107, 107, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 107, 107, 0);
+    }
+}
+
+.btn-danger.pulse {
+    animation: pulse 2s infinite;
+}
+
+.btn-delete-minimal {
+    background: transparent;
+    border: 2px solid #ff6b6b;
+    color: #ff6b6b;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 11px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.btn-delete-minimal:hover {
+    background: #ff6b6b;
     color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
+}
+
+.btn-delete-slide {
+    background: #ff6b6b;
     border: none;
+    color: white;
     padding: 8px 16px;
     border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
     cursor: pointer;
-    font-weight: 500;
-    transition: all 0.2s ease;
-    border: 2px solid #c0392b;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
 }
 
-.btn-eliminar:hover {
-    background: #c0392b;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+.btn-delete-slide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: left 0.3s ease;
 }
 
-.btn-eliminar:active {
-    transform: translateY(0);
+.btn-delete-slide:hover::before {
+    left: 100%;
+}
+
+.btn-delete-slide:hover {
+    background: #ff5252;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
 }
 
 .no-resultados {

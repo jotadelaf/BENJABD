@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema de Empleados</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="botones.css">
 </head>
 <body>
     <div class="container">
@@ -56,65 +57,32 @@
         <!-- Formulario Modificar Empleado -->
         <div id="modificar" class="form-section">
             <h2>Modificar Empleado</h2>
-            <form action="actualizar.php" method="post">
-                <div class="form-group">
-                    <label for="campo_modificar">Campo a Modificar:</label>
-                    <select id="campo_modificar" name="campo_modificar" required>
-                        <option value="">Seleccione campo</option>
-                        <option value="nombre">Nombre</option>
-                        <option value="apellido">Apellido</option>
-                        <option value="sexo">Sexo</option>
-                        <option value="sueldo">Sueldo</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="nuevo_valor">Nuevo Valor:</label>
-                    <input type="text" id="nuevo_valor" name="nuevo_valor" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="condicion_campo">Condición (Campo):</label>
-                    <select id="condicion_campo" name="condicion_campo" required>
-                        <option value="">Seleccione campo</option>
-                        <option value="nombre">Nombre</option>
-                        <option value="apellido">Apellido</option>
-                        <option value="sexo">Sexo</option>
-                        <option value="sueldo">Sueldo</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="condicion_valor">Condición (Valor):</label>
-                    <input type="text" id="condicion_valor" name="condicion_valor" required>
-                </div>
-
-                <button type="submit" class="btn-submit">Modificar Empleado</button>
-            </form>
+            <div class="form-group">
+                <label for="buscar_nombre_modificar">Buscar por Nombre:</label>
+                <input type="text" id="buscar_nombre_modificar" name="buscar_nombre_modificar" placeholder="Escriba el nombre a buscar...">
+            </div>
+            <div class="form-group">
+                <label for="nuevo_sueldo_modificar">Nuevo Sueldo:</label>
+                <input type="number" id="nuevo_sueldo_modificar" name="nuevo_sueldo_modificar" min="0" step="1" placeholder="Ingrese el nuevo sueldo">
+            </div>
+            <div class="form-group">
+                <button type="button" id="btn_modificar_sueldo" class="btn-submit" onclick="modificarSueldoSeleccionado()" disabled>Modificar Sueldo</button>
+            </div>
+            <div id="resultados-busqueda-modificar" class="empleados-lista">
+                <!-- Los resultados de búsqueda se mostrarán aquí -->
+            </div>
         </div>
 
         <!-- Formulario Eliminar Empleado -->
         <div id="eliminar" class="form-section">
             <h2>Eliminar Empleado</h2>
-            <form action="eliminar.php" method="post">
-                <div class="form-group">
-                    <label for="campo_eliminar">Campo de Condición:</label>
-                    <select id="campo_eliminar" name="campo_eliminar" required>
-                        <option value="">Seleccione campo</option>
-                        <option value="nombre">Nombre</option>
-                        <option value="apellido">Apellido</option>
-                        <option value="sexo">Sexo</option>
-                        <option value="sueldo">Sueldo</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="valor_eliminar">Valor de Condición:</label>
-                    <input type="text" id="valor_eliminar" name="valor_eliminar" required>
-                </div>
-
-                <button type="submit" class="btn-submit btn-danger">Eliminar Empleado</button>
-            </form>
+            <div class="form-group">
+                <label for="buscar_nombre">Buscar por Nombre:</label>
+                <input type="text" id="buscar_nombre" name="buscar_nombre" placeholder="Escriba el nombre a buscar...">
+            </div>
+            <div id="resultados-busqueda" class="empleados-lista">
+                <!-- Los resultados de búsqueda se mostrarán aquí -->
+            </div>
         </div>
 
         <!-- Formulario Listar Empleados 1 -->
@@ -142,6 +110,9 @@
     </div>
 
     <script>
+        // Variables globales para empleado seleccionado
+        let empleadoSeleccionado = null;
+
         // Función para mostrar diferentes formularios
         function showForm(formId) {
             // Ocultar todos los formularios
@@ -156,11 +127,14 @@
             botones.forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
 
-            // Cargar empleados automáticamente
+            // Limpiar campos si se cambia de formulario
+            if (formId !== 'modificar') {
+                limpiarCamposModificar();
+            }
+
+            // Cargar empleados automáticamente solo para listar1
             if (formId === 'listar1') {
                 cargarTodosLosEmpleados();
-            } else if (formId === 'listar2') {
-                cargarEmpleadosFiltrados();
             }
         }
 
@@ -169,10 +143,8 @@
             const contenedor = document.getElementById('lista-empleados-todos');
             if (!contenedor) return;
 
-            // Mostrar mensaje de carga
             contenedor.innerHTML = '<div class="no-resultados">Cargando empleados...</div>';
 
-            // Hacer petición al servidor
             fetch('listar1.php', {
                 method: 'POST',
                 body: new FormData()
@@ -193,19 +165,16 @@
             if (!contenedor) return;
 
             // Si no hay filtro seleccionado, limpiar la lista
-            if (!filtro || filtro === '') {
+            if (!filtro) {
                 contenedor.innerHTML = '';
                 return;
             }
 
-            // Mostrar mensaje de carga
             contenedor.innerHTML = '<div class="no-resultados">Cargando empleados...</div>';
 
-            // Preparar datos para enviar
             const datos = new FormData();
             datos.append('filtro_sexo', filtro);
 
-            // Hacer petición al servidor
             fetch('listar2.php', {
                 method: 'POST',
                 body: datos
@@ -225,7 +194,172 @@
             if (filtroSexo) {
                 filtroSexo.addEventListener('change', cargarEmpleadosFiltrados);
             }
+
+            // Evento para búsqueda en tiempo real (eliminar)
+            const buscarNombre = document.getElementById('buscar_nombre');
+            if (buscarNombre) {
+                buscarNombre.addEventListener('input', buscarEmpleadosPorNombre);
+            }
+
+            // Evento para búsqueda en tiempo real (modificar)
+            const buscarNombreModificar = document.getElementById('buscar_nombre_modificar');
+            if (buscarNombreModificar) {
+                buscarNombreModificar.addEventListener('input', buscarEmpleadosParaModificar);
+            }
         });
+
+        // Función para buscar empleados por nombre (eliminar)
+        function buscarEmpleadosPorNombre() {
+            const nombre = document.getElementById('buscar_nombre').value;
+            const contenedor = document.getElementById('resultados-busqueda');
+            if (!contenedor) return;
+
+            // Si no hay nombre, limpiar resultados
+            if (!nombre || nombre.trim() === '') {
+                contenedor.innerHTML = '';
+                return;
+            }
+
+            contenedor.innerHTML = '<div class="no-resultados">Buscando empleados...</div>';
+
+            const datos = new FormData();
+            datos.append('nombre', nombre);
+
+            fetch('eliminar.php', {
+                method: 'POST',
+                body: datos
+            })
+            .then(response => response.text())
+            .then(data => {
+                contenedor.innerHTML = data;
+            })
+            .catch(error => {
+                contenedor.innerHTML = '<div class="no-resultados">Error al buscar empleados</div>';
+            });
+        }
+
+        // Función para buscar empleados por nombre (modificar)
+        function buscarEmpleadosParaModificar() {
+            const nombre = document.getElementById('buscar_nombre_modificar').value;
+            const contenedor = document.getElementById('resultados-busqueda-modificar');
+            if (!contenedor) return;
+
+            // Si no hay nombre, limpiar resultados
+            if (!nombre || nombre.trim() === '') {
+                contenedor.innerHTML = '';
+                return;
+            }
+
+            contenedor.innerHTML = '<div class="no-resultados">Buscando empleados...</div>';
+
+            const datos = new FormData();
+            datos.append('nombre', nombre);
+
+            fetch('actualizar.php', {
+                method: 'POST',
+                body: datos
+            })
+            .then(response => response.text())
+            .then(data => {
+                contenedor.innerHTML = data;
+            })
+            .catch(error => {
+                contenedor.innerHTML = '<div class="no-resultados">Error al buscar empleados</div>';
+            });
+        }
+
+        // Función para eliminar empleado
+        function eliminarEmpleado(id) {
+            if (!confirm('¿Está seguro de que desea eliminar este empleado?')) {
+                return;
+            }
+
+            const datos = new FormData();
+            datos.append('id', id);
+
+            fetch('eliminar.php', {
+                method: 'POST',
+                body: datos
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                // Recargar la búsqueda actual
+                buscarEmpleadosPorNombre();
+            })
+            .catch(error => {
+                alert('Error al eliminar el empleado');
+            });
+        }
+
+        // Función para seleccionar empleado
+        function seleccionarEmpleado(id, nombre, sueldoActual) {
+            // Guardar empleado seleccionado
+            empleadoSeleccionado = { id, nombre, sueldoActual };
+            
+            // Mostrar información del empleado seleccionado
+            alert(`Empleado seleccionado:\nNombre: ${nombre}\nSueldo actual: $${sueldoActual}\n\nAhora puede ingresar el nuevo sueldo en el campo correspondiente y hacer clic en "Modificar Sueldo"`);
+            
+            // Poner el sueldo actual como valor sugerido
+            document.getElementById('nuevo_sueldo_modificar').value = sueldoActual;
+            document.getElementById('nuevo_sueldo_modificar').focus();
+            
+            // Habilitar botón de modificar
+            document.getElementById('btn_modificar_sueldo').disabled = false;
+        }
+
+        // Función para limpiar campos del formulario de modificar
+        function limpiarCamposModificar() {
+            document.getElementById('buscar_nombre_modificar').value = '';
+            document.getElementById('nuevo_sueldo_modificar').value = '';
+            document.getElementById('resultados-busqueda-modificar').innerHTML = '';
+            empleadoSeleccionado = null;
+            document.getElementById('btn_modificar_sueldo').disabled = true;
+        }
+
+        // Función para modificar sueldo de empleado seleccionado
+        function modificarSueldoSeleccionado() {
+            if (!empleadoSeleccionado) {
+                alert('Por favor seleccione un empleado primero');
+                return;
+            }
+
+            const nuevoSueldo = document.getElementById('nuevo_sueldo_modificar').value;
+            
+            if (!nuevoSueldo || nuevoSueldo.trim() === '') {
+                alert('Por favor ingrese el nuevo sueldo en el campo correspondiente');
+                return;
+            }
+
+            // Validar que sea un número válido
+            if (isNaN(nuevoSueldo) || parseFloat(nuevoSueldo) < 0) {
+                alert('Por favor ingrese un sueldo válido (número mayor o igual a 0)');
+                return;
+            }
+
+            if (!confirm(`¿Está seguro de que desea cambiar el sueldo de ${empleadoSeleccionado.nombre} de $${empleadoSeleccionado.sueldoActual} a $${nuevoSueldo}?`)) {
+                return;
+            }
+
+            // Enviar datos para modificar
+            const datos = new FormData();
+            datos.append('id', empleadoSeleccionado.id);
+            datos.append('nuevo_sueldo', nuevoSueldo);
+
+            fetch('actualizar.php', {
+                method: 'POST',
+                body: datos
+            })
+            .then(response => response.text())
+            .then(data => {
+                alert(data);
+                // Limpiar todos los campos del formulario
+                limpiarCamposModificar();
+            })
+            .catch(error => {
+                alert('Error al modificar el empleado');
+            });
+        }
     </script>
 </body>
 </html>
