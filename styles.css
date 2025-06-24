@@ -338,4 +338,77 @@ select:focus {
     .empleados-table td {
         padding: 12px;
     }
+}
+
+/* Lista de empleados para eliminar */
+.empleados-lista {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    max-height: 400px;
+    overflow-y: auto;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.empleado-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 18px;
+    border-bottom: 1px solid #edf2f7;
+    transition: background 0.2s ease;
+}
+
+.empleado-item:last-child {
+    border-bottom: none;
+}
+
+.empleado-item:hover {
+    background: #f7fafc;
+}
+
+.empleado-info {
+    flex: 1;
+}
+
+.empleado-nombre {
+    font-weight: 500;
+    color: #2d3748;
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+.empleado-detalles {
+    font-size: 12px;
+    color: #4a5568;
+}
+
+.btn-eliminar {
+    background: #e53e3e;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-left: 15px;
+}
+
+.btn-eliminar:hover {
+    background: #c53030;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 6px rgba(229, 62, 62, 0.3);
+}
+
+.btn-eliminar:active {
+    transform: translateY(0);
+}
+
+.no-resultados {
+    padding: 20px;
+    text-align: center;
+    color: #4a5568;
+    font-style: italic;
 } 

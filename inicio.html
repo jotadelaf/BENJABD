@@ -56,7 +56,7 @@
         <!-- Formulario Modificar Empleado -->
         <div id="modificar" class="form-section">
             <h2>Modificar Sueldo de Empleado</h2>
-            <form action="actualizar.php" method="post">
+            <form action="actualizar.php" method="post" id="formModificarSueldo">
                 <div class="form-group">
                     <label for="buscar_empleado">Buscar Empleado:</label>
                     <div class="search-container">
@@ -76,31 +76,28 @@
                     <input type="number" id="nuevo_sueldo" name="nuevo_sueldo" step="0.01" min="0" required>
                 </div>
 
-                <button type="submit" class="btn-submit">Actualizar Sueldo</button>
+                <button type="submit" class="btn-submit" id="btnActualizarSueldo">Actualizar Sueldo</button>
             </form>
         </div>
 
         <!-- Formulario Eliminar Empleado -->
         <div id="eliminar" class="form-section">
             <h2>Eliminar Empleado</h2>
-            <form action="eliminar.php" method="post">
+            <form action="eliminar.php" method="post" id="formEliminarEmpleado">
                 <div class="form-group">
-                    <label for="campo_eliminar">Campo de Condición:</label>
-                    <select id="campo_eliminar" name="campo_eliminar" required>
-                        <option value="">Seleccione campo</option>
-                        <option value="nombre">Nombre</option>
-                        <option value="apellido">Apellido</option>
-                        <option value="sexo">Sexo</option>
-                        <option value="sueldo">Sueldo</option>
-                    </select>
+                    <label for="buscar_empleado_eliminar">Buscar Empleado:</label>
+                    <div class="search-container">
+                        <input type="text" id="buscar_empleado_eliminar" name="buscar_empleado_eliminar" placeholder="Escriba el nombre del empleado..." autocomplete="off">
+                        <div id="search-results-eliminar" class="search-results" style="display: none;"></div>
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="valor_eliminar">Valor de Condición:</label>
-                    <input type="text" id="valor_eliminar" name="valor_eliminar" required>
+                    <label>Resultados de Búsqueda:</label>
+                    <div id="empleados-lista" class="empleados-lista" style="display: none;">
+                        <!-- Los empleados se mostrarán aquí dinámicamente -->
+                    </div>
                 </div>
-
-                <button type="submit" class="btn-submit btn-danger">Eliminar Empleado</button>
             </form>
         </div>
 
@@ -154,6 +151,14 @@
             const empleadoId = document.getElementById('empleado_id');
             let searchTimeout;
 
+            // Elementos para eliminar empleado
+            const searchInputEliminar = document.getElementById('buscar_empleado_eliminar');
+            const searchResultsEliminar = document.getElementById('search-results-eliminar');
+            const empleadoSeleccionadoEliminar = document.getElementById('empleado_seleccionado_eliminar');
+            const empleadoIdEliminar = document.getElementById('empleado_id_eliminar');
+            let searchTimeoutEliminar;
+
+            // Búsqueda para modificar sueldo
             if (searchInput) {
                 searchInput.addEventListener('input', function() {
                     const query = this.value.trim();
@@ -169,7 +174,7 @@
 
                     // Buscar después de 300ms de inactividad
                     searchTimeout = setTimeout(() => {
-                        buscarEmpleados(query);
+                        buscarEmpleados(query, searchResults, empleadoSeleccionado, empleadoId, searchInput);
                     }, 300);
                 });
 
@@ -181,7 +186,36 @@
                 });
             }
 
-            function buscarEmpleados(query) {
+            // Búsqueda para eliminar empleado
+            if (searchInputEliminar) {
+                searchInputEliminar.addEventListener('input', function() {
+                    const query = this.value.trim();
+                    
+                    // Limpiar timeout anterior
+                    clearTimeout(searchTimeoutEliminar);
+                    
+                    // Ocultar resultados si no hay consulta
+                    if (query.length < 2) {
+                        searchResultsEliminar.style.display = 'none';
+                        document.getElementById('empleados-lista').style.display = 'none';
+                        return;
+                    }
+
+                    // Buscar después de 300ms de inactividad
+                    searchTimeoutEliminar = setTimeout(() => {
+                        buscarEmpleadosParaEliminar(query);
+                    }, 300);
+                });
+
+                // Ocultar resultados al hacer clic fuera
+                document.addEventListener('click', function(e) {
+                    if (!searchInputEliminar.contains(e.target) && !searchResultsEliminar.contains(e.target)) {
+                        searchResultsEliminar.style.display = 'none';
+                    }
+                });
+            }
+
+            function buscarEmpleados(query, resultsContainer, empleadoField, empleadoIdField, searchInputField) {
                 // Crear formulario temporal para enviar datos
                 const formData = new FormData();
                 formData.append('action', 'buscar');
@@ -193,18 +227,18 @@
                 })
                 .then(response => response.json())
                 .then(data => {
-                    mostrarResultados(data);
+                    mostrarResultados(data, resultsContainer, empleadoField, empleadoIdField, searchInputField);
                 })
                 .catch(error => {
                     console.error('Error en la búsqueda:', error);
                 });
             }
 
-            function mostrarResultados(empleados) {
-                searchResults.innerHTML = '';
+            function mostrarResultados(empleados, resultsContainer, empleadoField, empleadoIdField, searchInputField) {
+                resultsContainer.innerHTML = '';
                 
                 if (empleados.length === 0) {
-                    searchResults.innerHTML = '<div class="search-result-item">No se encontraron empleados</div>';
+                    resultsContainer.innerHTML = '<div class="search-result-item">No se encontraron empleados</div>';
                 } else {
                     empleados.forEach(empleado => {
                         const item = document.createElement('div');
@@ -215,17 +249,204 @@
                         `;
                         
                         item.addEventListener('click', function() {
-                            empleadoSeleccionado.value = `${empleado.nombre} ${empleado.apellido}`;
-                            empleadoId.value = empleado.id;
-                            searchInput.value = `${empleado.nombre} ${empleado.apellido}`;
-                            searchResults.style.display = 'none';
+                            empleadoField.value = `${empleado.nombre} ${empleado.apellido}`;
+                            empleadoIdField.value = empleado.id;
+                            searchInputField.value = `${empleado.nombre} ${empleado.apellido}`;
+                            resultsContainer.style.display = 'none';
                         });
                         
-                        searchResults.appendChild(item);
+                        resultsContainer.appendChild(item);
                     });
                 }
                 
-                searchResults.style.display = 'block';
+                resultsContainer.style.display = 'block';
+            }
+
+            function buscarEmpleadosParaEliminar(query) {
+                // Crear formulario temporal para enviar datos
+                const formData = new FormData();
+                formData.append('action', 'buscar');
+                formData.append('query', query);
+
+                fetch('actualizar.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    mostrarEmpleadosParaEliminar(data);
+                })
+                .catch(error => {
+                    console.error('Error en la búsqueda:', error);
+                });
+            }
+
+            function mostrarEmpleadosParaEliminar(empleados) {
+                const empleadosLista = document.getElementById('empleados-lista');
+                empleadosLista.innerHTML = '';
+                
+                if (empleados.length === 0) {
+                    empleadosLista.innerHTML = '<div class="no-resultados">No se encontraron empleados</div>';
+                } else {
+                    empleados.forEach(empleado => {
+                        const item = document.createElement('div');
+                        item.className = 'empleado-item';
+                        item.innerHTML = `
+                            <div class="empleado-info">
+                                <div class="empleado-nombre">${empleado.nombre} ${empleado.apellido}</div>
+                                <div class="empleado-detalles">Sueldo: $${empleado.sueldo} | Sexo: ${empleado.sexo}</div>
+                            </div>
+                            <button type="button" class="btn-eliminar" data-id="${empleado.id}" data-nombre="${empleado.nombre} ${empleado.apellido}">
+                                Eliminar
+                            </button>
+                        `;
+                        
+                        // Agregar evento de clic al botón eliminar
+                        const btnEliminar = item.querySelector('.btn-eliminar');
+                        btnEliminar.addEventListener('click', function() {
+                            const empleadoId = this.getAttribute('data-id');
+                            const empleadoNombre = this.getAttribute('data-nombre');
+                            confirmarEliminacion(empleadoId, empleadoNombre);
+                        });
+                        
+                        empleadosLista.appendChild(item);
+                    });
+                }
+                
+                empleadosLista.style.display = 'block';
+            }
+
+            function confirmarEliminacion(empleadoId, empleadoNombre) {
+                // Primera confirmación
+                const confirmacion = confirm(
+                    `⚠️ ADVERTENCIA: Esta acción es IRREVERSIBLE\n\n` +
+                    `¿Está completamente seguro de que desea ELIMINAR al empleado?\n\n` +
+                    `Empleado: ${empleadoNombre}\n\n` +
+                    `Esta acción eliminará permanentemente todos los datos del empleado.\n` +
+                    `No se podrá recuperar la información una vez eliminada.\n\n` +
+                    `¿Desea continuar?`
+                );
+                
+                if (confirmacion) {
+                    // Segunda confirmación con prompt
+                    const confirmacionFinal = prompt(
+                        `Para confirmar la eliminación, escriba exactamente "ELIMINAR":\n\n` +
+                        `Empleado: ${empleadoNombre}`
+                    );
+                    
+                    if (confirmacionFinal === 'ELIMINAR') {
+                        // Si confirma ambas veces, enviar la eliminación
+                        eliminarEmpleado(empleadoId, empleadoNombre);
+                    } else {
+                        alert('Eliminación cancelada. El empleado no ha sido eliminado.');
+                    }
+                }
+            }
+
+            function eliminarEmpleado(empleadoId, empleadoNombre) {
+                // Crear formulario temporal para enviar datos
+                const formData = new FormData();
+                formData.append('empleado_id_eliminar', empleadoId);
+
+                fetch('eliminar.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.text())
+                .then(data => {
+                    // Mostrar resultado en una nueva ventana o redirigir
+                    const nuevaVentana = window.open('', '_blank');
+                    nuevaVentana.document.write(data);
+                    nuevaVentana.document.close();
+                    
+                    // Limpiar la búsqueda y actualizar la lista
+                    document.getElementById('buscar_empleado_eliminar').value = '';
+                    document.getElementById('empleados-lista').style.display = 'none';
+                    
+                    // Mostrar mensaje de éxito
+                    alert(`Empleado ${empleadoNombre} eliminado exitosamente.`);
+                })
+                .catch(error => {
+                    console.error('Error al eliminar:', error);
+                    alert('Error al eliminar el empleado. Por favor, intente nuevamente.');
+                });
+            }
+
+            // Validación de confirmación antes de modificar sueldo
+            const formModificarSueldo = document.getElementById('formModificarSueldo');
+            if (formModificarSueldo) {
+                formModificarSueldo.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const empleado = empleadoSeleccionado.value;
+                    const nuevoSueldo = document.getElementById('nuevo_sueldo').value;
+                    
+                    // Validar que se haya seleccionado un empleado
+                    if (!empleado || empleado.trim() === '') {
+                        alert('Por favor, seleccione un empleado antes de continuar.');
+                        return;
+                    }
+                    
+                    // Validar que se haya ingresado un sueldo
+                    if (!nuevoSueldo || nuevoSueldo <= 0) {
+                        alert('Por favor, ingrese un sueldo válido mayor a 0.');
+                        return;
+                    }
+                    
+                    // Mostrar confirmación
+                    const confirmacion = confirm(
+                        `¿Está seguro de que desea modificar el sueldo?\n\n` +
+                        `Empleado: ${empleado}\n` +
+                        `Nuevo Sueldo: $${parseFloat(nuevoSueldo).toFixed(2)}\n\n` +
+                        `Esta acción no se puede deshacer.`
+                    );
+                    
+                    if (confirmacion) {
+                        // Si confirma, enviar el formulario
+                        formModificarSueldo.submit();
+                    }
+                });
+            }
+
+            // Validación de confirmación antes de eliminar empleado
+            const formEliminarEmpleado = document.getElementById('formEliminarEmpleado');
+            if (formEliminarEmpleado) {
+                formEliminarEmpleado.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const empleado = empleadoSeleccionadoEliminar.value;
+                    
+                    // Validar que se haya seleccionado un empleado
+                    if (!empleado || empleado.trim() === '') {
+                        alert('Por favor, seleccione un empleado antes de continuar.');
+                        return;
+                    }
+                    
+                    // Mostrar confirmación de eliminación
+                    const confirmacion = confirm(
+                        `⚠️ ADVERTENCIA: Esta acción es IRREVERSIBLE\n\n` +
+                        `¿Está completamente seguro de que desea ELIMINAR al empleado?\n\n` +
+                        `Empleado: ${empleado}\n\n` +
+                        `Esta acción eliminará permanentemente todos los datos del empleado.\n` +
+                        `No se podrá recuperar la información una vez eliminada.\n\n` +
+                        `Escriba "ELIMINAR" para confirmar:`
+                    );
+                    
+                    if (confirmacion) {
+                        // Segunda confirmación con prompt
+                        const confirmacionFinal = prompt(
+                            `Para confirmar la eliminación, escriba exactamente "ELIMINAR":\n\n` +
+                            `Empleado: ${empleado}`
+                        );
+                        
+                        if (confirmacionFinal === 'ELIMINAR') {
+                            // Si confirma ambas veces, enviar el formulario
+                            formEliminarEmpleado.submit();
+                        } else {
+                            alert('Eliminación cancelada. El empleado no ha sido eliminado.');
+                        }
+                    }
+                });
             }
         });
     </script>
