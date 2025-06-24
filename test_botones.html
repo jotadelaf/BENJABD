@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba de Botones</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="botones.css">
+    <style>
+        /* Estilos adicionales para la página de prueba */
+        body {
+            background: #f8f9fa;
+            padding: 20px;
+        }
+        .test-container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .button-row {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h2>Prueba de Botones de Eliminar</h2>
+        
+        <div class="button-row">
+            <span>Botón básico:</span>
+            <button class="btn-danger">Eliminar</button>
+        </div>
+        
+        <div class="button-row">
+            <span>Botón con hover:</span>
+            <button class="btn-danger">Eliminar (pasa el mouse)</button>
+        </div>
+        
+        <div class="button-row">
+            <span>Botón en tabla:</span>
+            <table style="border-collapse: collapse;">
+                <tr>
+                    <td style="padding: 10px; border: 1px solid #ddd;">Empleado 1</td>
+                    <td style="padding: 10px; border: 1px solid #ddd;">
+                        <button class="btn-danger">Eliminar</button>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="button-row">
+            <span>Estilos aplicados:</span>
+            <div style="font-size: 12px; color: #666;">
+                Color: #dc3545<br>
+                Borde: 1px solid #bd2130<br>
+                Padding: 8px 16px<br>
+                Border-radius: 6px
+            </div>
+        </div>
+    </div>
+    
+    <div class="test-container">
+        <h3>Verificación de CSS</h3>
+        <p>Si los botones no se ven rojos con bordes redondeados, hay un problema con la carga del CSS.</p>
+        <p><a href="inicio.html">Volver al sistema</a></p>
+    </div>
+</body>
+</html> 

@@ -1,3 +1,16 @@
+<?php
+// Incluir archivo de conexión
+require_once 'conexion.php';
+
+// Conectar a la base de datos
+$conexion = conectarBD();
+
+// Verificar si la conexión fue exitosa
+if (!$conexion) {
+    $error_conexion = "Error de conexión a la base de datos";
+}
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -10,31 +23,26 @@
     <div class="container">
         <h1>Respaldos del Sistema</h1>
         
+        <?php if (isset($error_conexion)): ?>
+            <div class="message error"><?php echo $error_conexion; ?></div>
+        <?php endif; ?>
+        
         <!-- Navegación para respaldos -->
         <nav class="nav-tabs">
-            <button class="nav-btn active" onclick="showBackup('insert')">Respaldos INSERT</button>
-            <button class="nav-btn" onclick="showBackup('update')">Respaldos UPDATE</button>
+            <button class="nav-btn active" onclick="mostrarRespaldo('insert')">Respaldos INSERT</button>
+            <button class="nav-btn" onclick="mostrarRespaldo('update')">Respaldos UPDATE</button>
         </nav>
 
         <!-- Respaldos de INSERT -->
         <div id="insert" class="backup-section active">
             <h2>Respaldos de Inserción</h2>
             <?php
-            // Configuración de la base de datos
-            $servername = "localhost";
-            $username = "root";
-            $password = "";
-            $dbname = "bdelafuente";
-
-            // Crear conexión
-            $conn = new mysqli($servername, $username, $password, $dbname);
-            if ($conn->connect_error) {
-                echo '<div class="message error">Conexión fallida: ' . $conn->connect_error . '</div>';
-            } else {
+            if (!isset($error_conexion)) {
                 // Consultar respaldos de INSERT
-                $result = $conn->query("SELECT * FROM temp_Empleados_Insert ORDER BY fecha_insercion DESC");
+                $resultado = $conexion->query("SELECT * FROM temp_Empleados_Insert ORDER BY fecha_insercion DESC");
                 
-                if ($result && $result->num_rows > 0) {
+                if ($resultado && $resultado->num_rows > 0) {
+                    // Crear tabla
                     echo '<table class="empleados-table">';
                     echo '<thead>';
                     echo '<tr>';
@@ -49,15 +57,16 @@
                     echo '</thead>';
                     echo '<tbody>';
                     
-                    while ($row = $result->fetch_assoc()) {
+                    // Mostrar cada respaldo
+                    while ($fila = $resultado->fetch_assoc()) {
                         echo '<tr>';
-                        echo '<td>' . htmlspecialchars($row['id_respaldo']) . '</td>';
-                        echo '<td>' . htmlspecialchars($row['id_empleado']) . '</td>';
-                        echo '<td>' . htmlspecialchars($row['nombre']) . '</td>';
-                        echo '<td>' . htmlspecialchars($row['apellido']) . '</td>';
-                        echo '<td>' . htmlspecialchars($row['sexo']) . '</td>';
-                        echo '<td>$' . number_format($row['sueldo'], 2) . '</td>';
-                        echo '<td>' . htmlspecialchars($row['fecha_insercion']) . '</td>';
+                        echo '<td>' . $fila['id_respaldo'] . '</td>';
+                        echo '<td>' . $fila['id_empleado'] . '</td>';
+                        echo '<td>' . $fila['nombre'] . '</td>';
+                        echo '<td>' . $fila['apellido'] . '</td>';
+                        echo '<td>' . $fila['sexo'] . '</td>';
+                        echo '<td>$ ' . number_format($fila['sueldo'], 0, ',', '.') . '</td>';
+                        echo '<td>' . $fila['fecha_insercion'] . '</td>';
                         echo '</tr>';
                     }
                     
@@ -74,11 +83,12 @@
         <div id="update" class="backup-section">
             <h2>Respaldos de Actualización</h2>
             <?php
-            if (!$conn->connect_error) {
+            if (!isset($error_conexion)) {
                 // Consultar respaldos de UPDATE
-                $result = $conn->query("SELECT * FROM temp_Empleados_Update ORDER BY fecha_modificacion DESC");
+                $resultado = $conexion->query("SELECT * FROM temp_Empleados_Update ORDER BY fecha_modificacion DESC");
                 
-                if ($result && $result->num_rows > 0) {
+                if ($resultado && $resultado->num_rows > 0) {
+                    // Crear tabla
                     echo '<table class="empleados-table">';
                     echo '<thead>';
                     echo '<tr>';
@@ -92,14 +102,15 @@
                     echo '</thead>';
                     echo '<tbody>';
                     
-                    while ($row = $result->fetch_assoc()) {
+                    // Mostrar cada respaldo
+                    while ($fila = $resultado->fetch_assoc()) {
                         echo '<tr>';
-                        echo '<td>' . htmlspecialchars($row['id_respaldo']) . '</td>';
-                        echo '<td>' . htmlspecialchars($row['id_empleado']) . '</td>';
-                        echo '<td>' . htmlspecialchars($row['campo_modificado']) . '</td>';
-                        echo '<td>' . htmlspecialchars($row['valor_anterior']) . '</td>';
-                        echo '<td>' . htmlspecialchars($row['valor_nuevo']) . '</td>';
-                        echo '<td>' . htmlspecialchars($row['fecha_modificacion']) . '</td>';
+                        echo '<td>' . $fila['id_respaldo'] . '</td>';
+                        echo '<td>' . $fila['id_empleado'] . '</td>';
+                        echo '<td>' . $fila['campo_modificado'] . '</td>';
+                        echo '<td>' . $fila['valor_anterior'] . '</td>';
+                        echo '<td>' . $fila['valor_nuevo'] . '</td>';
+                        echo '<td>' . $fila['fecha_modificacion'] . '</td>';
                         echo '</tr>';
                     }
                     
@@ -108,7 +119,11 @@
                 } else {
                     echo '<div class="message warning">No hay respaldos de actualización registrados.</div>';
                 }
-                $conn->close();
+            }
+            
+            // Cerrar conexión
+            if (isset($conexion)) {
+                cerrarConexion($conexion);
             }
             ?>
         </div>
@@ -119,17 +134,18 @@
     </div>
 
     <script>
-        function showBackup(backupType) {
+        // Función para mostrar diferentes tipos de respaldos
+        function mostrarRespaldo(tipo) {
             // Ocultar todas las secciones
-            const sections = document.querySelectorAll('.backup-section');
-            sections.forEach(section => section.classList.remove('active'));
+            const secciones = document.querySelectorAll('.backup-section');
+            secciones.forEach(seccion => seccion.classList.remove('active'));
             
             // Mostrar la sección seleccionada
-            document.getElementById(backupType).classList.add('active');
+            document.getElementById(tipo).classList.add('active');
             
             // Actualizar botones de navegación
-            const buttons = document.querySelectorAll('.nav-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
+            const botones = document.querySelectorAll('.nav-btn');
+            botones.forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
         }
     </script>

@@ -1,163 +1,94 @@
 <?php
-/**
- * Sistema de Gestión de Empleados - Eliminación
- * Maneja la eliminación segura de empleados por ID
- */
+// Incluir conexión a la base de datos
+require_once 'conexion.php';
 
-// Configuración de la base de datos
-class DatabaseConfig {
-    const SERVER = "localhost";
-    const USERNAME = "root";
-    const PASSWORD = "";
-    const DBNAME = "bdelafuente";
-}
+// Agregar estilos CSS específicos para botones
+echo '<link rel="stylesheet" href="botones.css">';
 
-// Clase para manejo de empleados
-class EmpleadoManager {
-    private $conn;
+// Obtener conexión
+$conexion = conectarBD();
+
+// Verificar si es una búsqueda por nombre
+if (isset($_POST['nombre']) && !empty($_POST['nombre'])) {
+    $nombre = $_POST['nombre'];
     
-    public function __construct() {
-        $this->conn = new mysqli(
-            DatabaseConfig::SERVER,
-            DatabaseConfig::USERNAME,
-            DatabaseConfig::PASSWORD,
-            DatabaseConfig::DBNAME
-        );
-        
-        if ($this->conn->connect_error) {
-            throw new Exception("Error de conexión: " . $this->conn->connect_error);
-        }
-        
-        $this->conn->set_charset("utf8");
+    // Buscar empleados usando el procedimiento almacenado
+    $stmt = $conexion->prepare("CALL EliminarEmpleado('BUSCAR', 'nombre', ?)");
+    if (!$stmt) {
+        echo '<div class="no-resultados">Error en la consulta: ' . $conexion->error . '</div>';
+        cerrarConexion($conexion);
+        exit;
     }
     
-    /**
-     * Elimina un empleado por ID
-     */
-    public function eliminarEmpleado($empleadoId) {
-        // Validar ID
-        if (!is_numeric($empleadoId) || $empleadoId <= 0) {
-            throw new Exception("ID de empleado inválido");
-        }
-        
-        // Verificar que el empleado existe
-        $stmt = $this->conn->prepare("SELECT id, nombre, apellido FROM empleados WHERE id = ?");
-        $stmt->bind_param("i", $empleadoId);
-        
-        if (!$stmt->execute()) {
-            throw new Exception("Error al verificar empleado: " . $stmt->error);
-        }
-        
-        $result = $stmt->get_result();
-        if ($result->num_rows === 0) {
-            $stmt->close();
-            throw new Exception("Empleado no encontrado");
-        }
-        
-        $empleado = $result->fetch_assoc();
-        $nombreCompleto = $empleado['nombre'] . ' ' . $empleado['apellido'];
-        $stmt->close();
-        
-        // Eliminar empleado usando procedimiento almacenado
-        $stmt = $this->conn->prepare("CALL EliminarEmpleado(?, ?)");
-        $campo = "id";
-        $stmt->bind_param("ss", $campo, $empleadoId);
-        
-        if (!$stmt->execute()) {
-            throw new Exception("Error al eliminar empleado: " . $stmt->error);
-        }
-        
-        $affectedRows = $stmt->affected_rows;
-        $stmt->close();
-        
-        if ($affectedRows === 0) {
-            throw new Exception("No se pudo eliminar el empleado");
-        }
-        
-        return [
-            'empleado' => $nombreCompleto,
-            'registros_eliminados' => $affectedRows
-        ];
-    }
+    $stmt->bind_param("s", $nombre);
+    $stmt->execute();
+    $resultado = $stmt->get_result();
     
-    public function __destruct() {
-        if ($this->conn) {
-            $this->conn->close();
+    // Verificar si hay resultados
+    if ($resultado && $resultado->num_rows > 0) {
+        echo '<table class="empleados-table">';
+        echo '<thead>';
+        echo '<tr>';
+        echo '<th>ID</th>';
+        echo '<th>Nombre</th>';
+        echo '<th>Apellido</th>';
+        echo '<th>Sexo</th>';
+        echo '<th>Sueldo</th>';
+        echo '<th>Acción</th>';
+        echo '</tr>';
+        echo '</thead>';
+        echo '<tbody>';
+        
+        while ($empleado = $resultado->fetch_assoc()) {
+            echo '<tr>';
+            echo '<td>' . $empleado['id'] . '</td>';
+            echo '<td>' . htmlspecialchars($empleado['nombre']) . '</td>';
+            echo '<td>' . htmlspecialchars($empleado['apellido']) . '</td>';
+            echo '<td>' . htmlspecialchars($empleado['sexo']) . '</td>';
+            echo '<td>$ ' . number_format($empleado['sueldo'], 0, ',', '.') . '</td>';
+            echo '<td><button onclick="eliminarEmpleado(' . $empleado['id'] . ')" class="btn-danger">Eliminar</button></td>';
+            echo '</tr>';
         }
-    }
-}
-
-// Manejo de la solicitud
-try {
-    $manager = new EmpleadoManager();
-    
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $empleadoId = $_POST['empleado_id_eliminar'] ?? '';
         
-        if (empty($empleadoId)) {
-            throw new Exception("ID de empleado no proporcionado");
-        }
-        
-        $resultado = $manager->eliminarEmpleado($empleadoId);
-        
-        // Mostrar página de éxito
-        ?>
-        <!DOCTYPE html>
-        <html lang="es">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Empleado Eliminado</title>
-            <link rel="stylesheet" href="styles.css">
-        </head>
-        <body>
-            <div class="container">
-                <h1>Empleado Eliminado Exitosamente</h1>
-                
-                <div class="message success">
-                    <h3>✅ Eliminación Completada</h3>
-                    <p><strong>Empleado:</strong> <?php echo htmlspecialchars($resultado['empleado']); ?></p>
-                    <p><strong>Registros Eliminados:</strong> <?php echo $resultado['registros_eliminados']; ?></p>
-                    <p><em>La información del empleado ha sido eliminada permanentemente de la base de datos.</em></p>
-                </div>
-                
-                <div style="text-align: center; margin-top: 30px;">
-                    <a href="inicio.html" class="btn-submit" style="text-decoration: none; display: inline-block; padding: 12px 24px;">Volver al Sistema</a>
-                </div>
-            </div>
-        </body>
-        </html>
-        <?php
+        echo '</tbody>';
+        echo '</table>';
     } else {
-        throw new Exception("Método de solicitud no válido");
+        echo '<div class="no-resultados">No se encontraron empleados con ese nombre</div>';
     }
     
-} catch (Exception $e) {
-    // Mostrar página de error
-    ?>
-    <!DOCTYPE html>
-    <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Error al Eliminar</title>
-        <link rel="stylesheet" href="styles.css">
-    </head>
-    <body>
-        <div class="container">
-            <h1>Error al Eliminar Empleado</h1>
-            
-            <div class="message error">
-                <h3>❌ Error</h3>
-                <p><?php echo htmlspecialchars($e->getMessage()); ?></p>
-            </div>
-            
-            <div style="text-align: center; margin-top: 30px;">
-                <a href="inicio.html" class="btn-submit" style="text-decoration: none; display: inline-block; padding: 12px 24px;">Volver al Sistema</a>
-            </div>
-        </div>
-    </body>
-    </html>
-    <?php
+    $stmt->close();
 }
+
+// Verificar si es una eliminación por ID
+elseif (isset($_POST['id']) && !empty($_POST['id'])) {
+    $id = $_POST['id'];
+    
+    // Eliminar empleado usando el procedimiento almacenado
+    $stmt = $conexion->prepare("CALL EliminarEmpleado('ELIMINAR', 'id', ?)");
+    if (!$stmt) {
+        echo 'Error en la consulta: ' . $conexion->error;
+        cerrarConexion($conexion);
+        exit;
+    }
+    
+    $stmt->bind_param("s", $id);
+    $stmt->execute();
+    
+    // Verificar si se eliminó correctamente
+    if ($stmt->affected_rows > 0) {
+        echo 'Empleado eliminado correctamente';
+    } else {
+        echo 'No se pudo eliminar el empleado';
+    }
+    
+    $stmt->close();
+}
+
+// Si no se recibió ningún parámetro válido
+else {
+    echo 'Error: No se especificó la acción a realizar';
+}
+
+// Cerrar conexión
+cerrarConexion($conexion);
 ?> 

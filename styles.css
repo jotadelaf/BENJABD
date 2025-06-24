@@ -6,43 +6,41 @@
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-    background: linear-gradient(135deg, #2c3e50 0%, #34495e 50%, #4a5568 100%);
+    background: #1a1a1a;
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     padding: 20px;
-    color: #2c3e50;
+    color: #333333;
     line-height: 1.6;
 }
 
 .container {
     background: #ffffff;
-    padding: 50px;
-    border-radius: 8px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     width: 100%;
     max-width: 1200px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid #e0e0e0;
 }
 
 h1 {
     text-align: center;
-    color: #1a202c;
+    color: #2c3e50;
     margin-bottom: 40px;
     font-size: 2.2em;
-    font-weight: 400;
+    font-weight: 600;
     letter-spacing: -0.5px;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
 }
 
 h2 {
     text-align: center;
-    color: #2d3748;
+    color: #34495e;
     margin-bottom: 30px;
     font-size: 1.5em;
-    font-weight: 400;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    font-weight: 500;
 }
 
 /* Navegación */
@@ -50,42 +48,42 @@ h2 {
     display: flex;
     justify-content: center;
     margin-bottom: 40px;
-    background: #2d3748;
-    border-radius: 8px;
-    padding: 6px;
-    gap: 6px;
-    border: 1px solid #1a202c;
+    background: #34495e;
+    border-radius: 10px;
+    padding: 8px;
+    gap: 8px;
+    border: 2px solid #2c3e50;
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
 }
 
 .nav-btn {
-    padding: 16px 22px;
+    padding: 16px 24px;
     border: none;
-    background: #4a5568;
-    color: #e2e8f0;
-    border-radius: 6px;
+    background: #5a6c7d;
+    color: #ffffff;
+    border-radius: 8px;
     cursor: pointer;
     font-weight: 500;
     transition: all 0.3s ease;
     flex: 1;
     font-size: 14px;
-    border: 1px solid #2d3748;
+    border: 1px solid #4a5a6b;
 }
 
 .nav-btn:hover {
-    background: #38a169;
+    background: #27ae60;
     color: #ffffff;
-    border-color: #2f855a;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(56, 161, 105, 0.3);
+    border-color: #229954;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.3);
 }
 
 .nav-btn.active {
-    background: #38a169;
+    background: #27ae60;
     color: white;
-    border-color: #2f855a;
-    box-shadow: 0 4px 12px rgba(56, 161, 105, 0.4);
-    transform: translateY(-1px);
+    border-color: #229954;
+    box-shadow: 0 4px 12px rgba(39, 174, 96, 0.4);
+    transform: translateY(-2px);
 }
 
 /* Secciones de formulario */
@@ -112,130 +110,424 @@ h2 {
 
 label {
     display: block;
-    margin-bottom: 10px;
-    color: #2d3748;
-    font-weight: 500;
+    margin-bottom: 12px;
+    color: #2c3e50;
+    font-weight: 600;
     font-size: 14px;
     letter-spacing: 0.2px;
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.03);
 }
 
 input[type="text"],
 input[type="number"],
 select {
     width: 100%;
-    padding: 15px 18px;
-    border: 1px solid #cbd5e0;
-    border-radius: 6px;
+    padding: 16px 20px;
+    border: 2px solid #d1d5db;
+    border-radius: 8px;
     font-size: 14px;
-    transition: all 0.2s ease;
-    background: #f7fafc;
-    color: #2d3748;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    transition: all 0.3s ease;
+    background: #f9fafb;
+    color: #374151;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 input[type="text"]:focus,
 input[type="number"]:focus,
 select:focus {
     outline: none;
-    border-color: #2d3748;
+    border-color: #27ae60;
     background: #ffffff;
-    box-shadow: 0 2px 8px rgba(45, 55, 72, 0.1);
+    box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.1);
 }
 
 .btn-submit {
     width: 100%;
     padding: 18px;
-    background: #2d3748;
+    background: #34495e;
     color: white;
     border: none;
     border-radius: 6px;
     font-size: 14px;
     font-weight: 400;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.3s ease;
     letter-spacing: 0.3px;
-    box-shadow: 0 3px 10px rgba(45, 55, 72, 0.2);
+    box-shadow: 0 4px 12px rgba(52, 73, 94, 0.3);
+    border: 2px solid #2c3e50;
 }
 
 .btn-submit:hover {
-    background: #1a202c;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(45, 55, 72, 0.3);
+    background: #2c3e50;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(52, 73, 94, 0.4);
 }
 
 .btn-submit:active {
     transform: translateY(0);
-    box-shadow: 0 2px 6px rgba(45, 55, 72, 0.2);
+    box-shadow: 0 2px 8px rgba(52, 73, 94, 0.3);
 }
 
+/* Estilos para botones de eliminar inspirados en Bootstrap */
 .btn-danger {
-    background: #4a5568;
-    box-shadow: 0 3px 10px rgba(74, 85, 104, 0.2);
+    background: #dc3545 !important;
+    border: 1px solid #bd2130 !important;
+    color: #ffffff !important;
+    padding: 8px 16px !important;
+    border-radius: 6px !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    cursor: pointer !important;
+    transition: all 0.15s ease-in-out !important;
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2) !important;
+    text-transform: none !important;
+    letter-spacing: 0.025em !important;
+    position: relative !important;
+    overflow: hidden !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 80px !important;
+    height: 32px !important;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    text-decoration: none !important;
+    outline: none !important;
 }
 
 .btn-danger:hover {
-    background: #2d3748;
-    box-shadow: 0 4px 12px rgba(74, 85, 104, 0.3);
+    background: #c82333 !important;
+    border-color: #a71e2a !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3) !important;
+}
+
+.btn-danger:active {
+    background: #a71e2a !important;
+    border-color: #8c1a23 !important;
+    transform: translateY(0) !important;
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2) !important;
+}
+
+.btn-danger:focus {
+    outline: 0 !important;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+}
+
+/* Botón de eliminar moderno con icono */
+.btn-delete-modern {
+    background: linear-gradient(145deg, #dc3545, #c82333);
+    border: 1px solid #bd2130;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    box-shadow: 0 3px 6px rgba(220, 53, 69, 0.2);
+    text-transform: none;
+    letter-spacing: 0.025em;
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 100px;
+    height: 36px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.btn-delete-modern::before {
+    content: '🗑️';
+    font-size: 14px;
+    line-height: 1;
+}
+
+.btn-delete-modern::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.15), transparent);
+    opacity: 0;
+    transition: opacity 0.15s ease-in-out;
+}
+
+.btn-delete-modern:hover {
+    background: linear-gradient(145deg, #c82333, #a71e2a);
+    border-color: #a71e2a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(220, 53, 69, 0.3);
+}
+
+.btn-delete-modern:hover::after {
+    opacity: 1;
+}
+
+.btn-delete-modern:active {
+    background: linear-gradient(145deg, #a71e2a, #8c1a23);
+    border-color: #8c1a23;
+    transform: translateY(-1px);
+    box-shadow: 0 3px 6px rgba(220, 53, 69, 0.2);
+}
+
+.btn-delete-modern:focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+/* Botón de eliminar outline (estilo Bootstrap outline) */
+.btn-outline-danger {
+    background: transparent;
+    border: 2px solid #dc3545;
+    color: #dc3545;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    text-transform: none;
+    letter-spacing: 0.025em;
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 80px;
+    height: 32px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.btn-outline-danger::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #dc3545;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.15s ease-in-out;
+    z-index: -1;
+}
+
+.btn-outline-danger:hover {
+    color: #ffffff;
+    border-color: #dc3545;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
+}
+
+.btn-outline-danger:hover::before {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+.btn-outline-danger:active {
+    background: #dc3545;
+    border-color: #dc3545;
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
+}
+
+.btn-outline-danger:focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+/* Botón de eliminar con badge (estilo Bootstrap badge) */
+.btn-danger-badge {
+    background: linear-gradient(145deg, #dc3545, #c82333);
+    border: 1px solid #bd2130;
+    color: #ffffff;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
+    text-transform: none;
+    letter-spacing: 0.025em;
+    position: relative;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-width: 90px;
+    height: 32px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.btn-danger-badge::before {
+    content: '🗑️';
+    font-size: 12px;
+    line-height: 1;
+}
+
+.btn-danger-badge::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.15), transparent);
+    opacity: 0;
+    transition: opacity 0.15s ease-in-out;
+}
+
+.btn-danger-badge:hover {
+    background: linear-gradient(145deg, #c82333, #a71e2a);
+    border-color: #a71e2a;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+.btn-danger-badge:hover::after {
+    opacity: 1;
+}
+
+.btn-danger-badge:active {
+    background: linear-gradient(145deg, #a71e2a, #8c1a23);
+    border-color: #8c1a23;
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.2);
+}
+
+.btn-danger-badge:focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+/* Botón de eliminar con loading state */
+.btn-danger.loading {
+    position: relative;
+    color: transparent;
+}
+
+.btn-danger.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 16px;
+    height: 16px;
+    margin: -8px 0 0 -8px;
+    border: 2px solid #ffffff;
+    border-top: 2px solid transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Botón de eliminar con tooltip */
+.btn-danger-tooltip {
+    position: relative;
+}
+
+.btn-danger-tooltip::after {
+    content: 'Eliminar empleado';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #343a40;
+    color: #ffffff;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.15s ease-in-out;
+    z-index: 1000;
+    margin-bottom: 5px;
+}
+
+.btn-danger-tooltip::before {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 4px solid transparent;
+    border-top-color: #343a40;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.15s ease-in-out;
+    z-index: 1000;
+    margin-bottom: 1px;
+}
+
+.btn-danger-tooltip:hover::after,
+.btn-danger-tooltip:hover::before {
+    opacity: 1;
+    visibility: visible;
 }
 
 .message {
     margin-top: 30px;
-    padding: 25px;
-    border-radius: 6px;
+    padding: 20px;
+    border-radius: 8px;
     text-align: left;
-    font-weight: 400;
+    font-weight: 500;
     font-size: 14px;
     border-left: 4px solid;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .success {
-    background: #f0fff4;
-    color: #22543d;
-    border-color: #48bb78;
+    background: #d4edda;
+    color: #155724;
+    border-color: #28a745;
 }
 
 .error {
-    background: #fed7d7;
-    color: #742a2a;
-    border-color: #f56565;
+    background: #f8d7da;
+    color: #721c24;
+    border-color: #dc3545;
 }
 
 .warning {
-    background: #fffbeb;
-    color: #744210;
-    border-color: #ed8936;
+    background: #fff3cd;
+    color: #856404;
+    border-color: #ffc107;
 }
 
 /* Tabla de empleados */
 .empleados-table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 30px;
-    background: white;
-    border-radius: 6px;
+    margin-top: 20px;
+    background: #ffffff;
+    border-radius: 8px;
     overflow: hidden;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
-    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
 }
 
 .empleados-table th,
 .empleados-table td {
-    padding: 18px;
+    padding: 16px;
     text-align: left;
-    border-bottom: 1px solid #e2e8f0;
-    font-size: 14px;
+    border-bottom: 1px solid #e0e0e0;
 }
 
 .empleados-table th {
-    background: #f7fafc;
-    font-weight: 500;
-    color: #2d3748;
-    text-transform: none;
+    background: #34495e;
+    color: #ffffff;
+    font-weight: 600;
     font-size: 14px;
-    letter-spacing: 0.2px;
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.03);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .empleados-table tr:hover {
@@ -246,10 +538,8 @@ select:focus {
     border-bottom: none;
 }
 
-/* Búsqueda y autocompletado */
 .search-container {
     position: relative;
-    margin-bottom: 30px;
 }
 
 .search-results {
@@ -257,25 +547,25 @@ select:focus {
     top: 100%;
     left: 0;
     right: 0;
-    background: white;
-    border: 1px solid #cbd5e0;
+    background: #ffffff;
+    border: 2px solid #27ae60;
     border-top: none;
-    border-radius: 0 0 6px 6px;
+    border-radius: 0 0 8px 8px;
     max-height: 200px;
     overflow-y: auto;
     z-index: 1000;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .search-result-item {
-    padding: 15px 18px;
+    padding: 12px 16px;
     cursor: pointer;
-    border-bottom: 1px solid #edf2f7;
+    border-bottom: 1px solid #e0e0e0;
     transition: background 0.2s ease;
 }
 
 .search-result-item:hover {
-    background: #f7fafc;
+    background: #f8f9fa;
 }
 
 .search-result-item:last-child {
@@ -283,23 +573,19 @@ select:focus {
 }
 
 .search-result-item .employee-name {
-    font-weight: 500;
-    color: #2d3748;
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.03);
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 4px;
 }
 
 .search-result-item .employee-details {
     font-size: 12px;
-    color: #4a5568;
-    margin-top: 4px;
+    color: #6c757d;
 }
 
-/* Responsive */
 @media (max-width: 768px) {
     .container {
         margin: 10px;
-        padding: 30px;
-        max-width: 95%;
     }
 
     h1 {
@@ -311,23 +597,21 @@ select:focus {
     }
 
     .nav-btn {
-        border-right: none;
-        border-bottom: 1px solid #e2e8f0;
+        margin-bottom: 4px;
     }
 
     .nav-btn:last-child {
-        border-bottom: none;
+        margin-bottom: 0;
     }
 
     input[type="text"],
     input[type="number"],
     select {
-        font-size: 16px;
-        padding: 12px 15px;
+        padding: 14px 16px;
     }
 
     .btn-submit {
-        padding: 15px;
+        padding: 16px;
     }
 
     .empleados-table {
@@ -336,26 +620,25 @@ select:focus {
 
     .empleados-table th,
     .empleados-table td {
-        padding: 12px;
+        padding: 8px;
     }
 }
 
-/* Lista de empleados para eliminar */
 .empleados-lista {
-    background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 6px;
-    max-height: 400px;
-    overflow-y: auto;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    margin-top: 20px;
+    background: #ffffff;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border: 1px solid #e0e0e0;
 }
 
 .empleado-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 18px;
-    border-bottom: 1px solid #edf2f7;
+    padding: 16px 20px;
+    border-bottom: 1px solid #e0e0e0;
     transition: background 0.2s ease;
 }
 
@@ -364,7 +647,7 @@ select:focus {
 }
 
 .empleado-item:hover {
-    background: #f7fafc;
+    background: #f8f9fa;
 }
 
 .empleado-info {
@@ -372,43 +655,97 @@ select:focus {
 }
 
 .empleado-nombre {
-    font-weight: 500;
-    color: #2d3748;
-    font-size: 14px;
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 16px;
     margin-bottom: 4px;
 }
 
 .empleado-detalles {
-    font-size: 12px;
-    color: #4a5568;
+    color: #6c757d;
+    font-size: 14px;
 }
 
-.btn-eliminar {
-    background: #e53e3e;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 8px 16px;
-    font-size: 12px;
-    font-weight: 500;
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(255, 107, 107, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 107, 107, 0);
+    }
+}
+
+.btn-danger.pulse {
+    animation: pulse 2s infinite;
+}
+
+.btn-delete-minimal {
+    background: transparent;
+    border: 2px solid #ff6b6b;
+    color: #ff6b6b;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 11px;
+    font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease;
-    margin-left: 15px;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
-.btn-eliminar:hover {
-    background: #c53030;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 6px rgba(229, 62, 62, 0.3);
+.btn-delete-minimal:hover {
+    background: #ff6b6b;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
 }
 
-.btn-eliminar:active {
-    transform: translateY(0);
+.btn-delete-slide {
+    background: #ff6b6b;
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-delete-slide::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    transition: left 0.3s ease;
+}
+
+.btn-delete-slide:hover::before {
+    left: 100%;
+}
+
+.btn-delete-slide:hover {
+    background: #ff5252;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
 }
 
 .no-resultados {
-    padding: 20px;
+    padding: 40px 20px;
     text-align: center;
-    color: #4a5568;
-    font-style: italic;
+    color: #6c757d;
+    font-size: 16px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 2px dashed #dee2e6;
 } 

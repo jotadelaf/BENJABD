@@ -11,54 +11,65 @@
         <h1>Lista de Empleados</h1>
         
         <?php
-        // Configuración de la base de datos
-        $servername = "localhost";
-        $username = "root";
-        $password = "";
-        $dbname = "bdelafuente";
+        // Incluir archivo de conexión
+        require_once 'conexion.php';
 
-        // Crear conexión
-        $conn = new mysqli($servername, $username, $password, $dbname);
-        if ($conn->connect_error) {
-            echo '<div class="message error">Conexión fallida: ' . $conn->connect_error . '</div>';
-        } else {
-            // Ejecutar el procedimiento almacenado
-            $result = $conn->query("CALL ListarEmpleados()");
-            
-            if ($result) {
-                if ($result->num_rows > 0) {
-                    echo '<table class="empleados-table">';
-                    echo '<thead>';
-                    echo '<tr>';
-                    echo '<th>ID</th>';
-                    echo '<th>Nombre</th>';
-                    echo '<th>Apellido</th>';
-                    echo '<th>Sexo</th>';
-                    echo '<th>Sueldo</th>';
-                    echo '</tr>';
-                    echo '</thead>';
-                    echo '<tbody>';
-                    
-                    while ($row = $result->fetch_assoc()) {
-                        echo '<tr>';
-                        echo '<td>' . htmlspecialchars($row['id']) . '</td>';
-                        echo '<td>' . htmlspecialchars($row['nombre']) . '</td>';
-                        echo '<td>' . htmlspecialchars($row['apellido']) . '</td>';
-                        echo '<td>' . htmlspecialchars($row['sexo']) . '</td>';
-                        echo '<td>$' . number_format($row['sueldo'], 2) . '</td>';
-                        echo '</tr>';
-                    }
-                    
-                    echo '</tbody>';
-                    echo '</table>';
-                } else {
-                    echo '<div class="message warning">No hay empleados registrados en la base de datos.</div>';
-                }
-            } else {
-                echo '<div class="message error">Error al listar empleados: ' . $conn->error . '</div>';
-            }
-            $conn->close();
+        // Conectar a la base de datos
+        $conexion = conectarBD();
+
+        // Verificar si la conexión fue exitosa
+        if (!$conexion) {
+            echo "Error de conexión a la base de datos";
+            exit;
         }
+
+        // Ejecutar el procedimiento almacenado para listar todos los empleados
+        $resultado = $conexion->query("CALL ListarEmpleados()");
+
+        // Verificar si la consulta fue exitosa
+        if ($resultado) {
+            // Verificar si hay empleados
+            if ($resultado->num_rows > 0) {
+                // Crear la tabla
+                echo '<table class="empleados-table">';
+                echo '<thead>';
+                echo '<tr>';
+                echo '<th>ID</th>';
+                echo '<th>Nombre</th>';
+                echo '<th>Apellido</th>';
+                echo '<th>Sexo</th>';
+                echo '<th>Sueldo</th>';
+                echo '</tr>';
+                echo '</thead>';
+                echo '<tbody>';
+                
+                // Mostrar cada empleado
+                while ($fila = $resultado->fetch_assoc()) {
+                    echo '<tr>';
+                    echo '<td>' . $fila['id'] . '</td>';
+                    echo '<td>' . $fila['nombre'] . '</td>';
+                    echo '<td>' . $fila['apellido'] . '</td>';
+                    echo '<td>' . $fila['sexo'] . '</td>';
+                    echo '<td>$ ' . number_format($fila['sueldo'], 0, ',', '.') . '</td>';
+                    echo '</tr>';
+                }
+                
+                echo '</tbody>';
+                echo '</table>';
+                
+                // Mostrar total de empleados
+                echo '<div class="message success" style="margin-top: 20px;">';
+                echo 'Total de empleados: ' . $resultado->num_rows;
+                echo '</div>';
+            } else {
+                echo '<div class="message warning">No hay empleados registrados en la base de datos.</div>';
+            }
+        } else {
+            echo '<div class="message error">Error al listar empleados: ' . $conexion->error . '</div>';
+        }
+
+        // Cerrar conexión
+        cerrarConexion($conexion);
         ?>
         
         <div style="text-align: center; margin-top: 20px;">
