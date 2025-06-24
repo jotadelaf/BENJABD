@@ -119,28 +119,25 @@
 
         <!-- Formulario Listar Empleados 1 -->
         <div id="listar1" class="form-section">
-            <h2>Listar Empleados (Método 1)</h2>
-            <form action="listar1.php" method="post">
-                <button type="submit" class="btn-submit">Mostrar Todos los Empleados</button>
-            </form>
+            <div id="lista-empleados-todos" class="empleados-lista">
+                <!-- Los empleados se cargarán aquí automáticamente -->
+            </div>
         </div>
 
         <!-- Formulario Listar Empleados 2 -->
         <div id="listar2" class="form-section">
-            <h2>Listar Empleados (Método 2)</h2>
-            <form action="listar2.php" method="post">
-                <div class="form-group">
-                    <label for="filtro_sexo">Filtrar por Sexo:</label>
-                    <select id="filtro_sexo" name="filtro_sexo">
-                        <option value="">Todos</option>
-                        <option value="Masculino">Masculino</option>
-                        <option value="Femenino">Femenino</option>
-                        <option value="Otro">Otro</option>
-                    </select>
-                </div>
-
-                <button type="submit" class="btn-submit">Mostrar Empleados Filtrados</button>
-            </form>
+            <div class="form-group">
+                <label for="filtro_sexo">Filtrar por Sexo:</label>
+                <select id="filtro_sexo" name="filtro_sexo">
+                    <option value="">Seleccione sexo</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Femenino">Femenino</option>
+                    <option value="Otro">Otro</option>
+                </select>
+            </div>
+            <div id="lista-empleados-filtrados" class="empleados-lista">
+                <!-- Los empleados filtrados se mostrarán aquí -->
+            </div>
         </div>
     </div>
 
@@ -157,7 +154,87 @@
             const buttons = document.querySelectorAll('.nav-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
+
+            // Cargar empleados automáticamente según el formulario
+            if (formId === 'listar1') {
+                cargarTodosLosEmpleados();
+            } else if (formId === 'listar2') {
+                cargarEmpleadosFiltrados();
+            }
         }
+
+        // Funciones para cargar empleados
+        function cargarTodosLosEmpleados() {
+            const listaContainer = document.getElementById('lista-empleados-todos');
+            if (!listaContainer) {
+                return;
+            }
+
+            // Mostrar indicador de carga
+            listaContainer.innerHTML = '<div class="no-resultados">Cargando empleados...</div>';
+
+            // Usar fetch para la petición AJAX
+            const formData = new FormData();
+            formData.append('action', 'listar_todos');
+
+            fetch('listar1.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                listaContainer.innerHTML = data;
+            })
+            .catch(error => {
+                console.error('Error al cargar empleados:', error);
+                listaContainer.innerHTML = '<div class="no-resultados">Error al cargar los empleados</div>';
+            });
+        }
+
+        function cargarEmpleadosFiltrados() {
+            const filtroSexo = document.getElementById('filtro_sexo').value;
+            const listaContainer = document.getElementById('lista-empleados-filtrados');
+            if (!listaContainer) {
+                return;
+            }
+
+            // Si no hay filtro seleccionado, limpiar la lista
+            if (!filtroSexo || filtroSexo === '') {
+                listaContainer.innerHTML = '';
+                return;
+            }
+
+            // Mostrar indicador de carga
+            listaContainer.innerHTML = '<div class="no-resultados">Cargando empleados...</div>';
+
+            // Usar fetch para la petición AJAX
+            const formData = new FormData();
+            formData.append('action', 'listar_filtrados');
+            formData.append('filtro_sexo', filtroSexo);
+
+            fetch('listar2.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                listaContainer.innerHTML = data;
+            })
+            .catch(error => {
+                console.error('Error al cargar empleados filtrados:', error);
+                listaContainer.innerHTML = '<div class="no-resultados">Error al cargar los empleados</div>';
+            });
+        }
+
+        // Evento para el filtro por sexo
+        document.addEventListener('DOMContentLoaded', function() {
+            const filtroSexo = document.getElementById('filtro_sexo');
+            if (filtroSexo) {
+                filtroSexo.addEventListener('change', function() {
+                    cargarEmpleadosFiltrados();
+                });
+            }
+        });
     </script>
 </body>
 </html>
