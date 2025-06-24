@@ -55,41 +55,28 @@
 
         <!-- Formulario Modificar Empleado -->
         <div id="modificar" class="form-section">
-            <h2>Modificar Empleado</h2>
+            <h2>Modificar Sueldo de Empleado</h2>
             <form action="actualizar.php" method="post">
                 <div class="form-group">
-                    <label for="campo_modificar">Campo a Modificar:</label>
-                    <select id="campo_modificar" name="campo_modificar" required>
-                        <option value="">Seleccione campo</option>
-                        <option value="nombre">Nombre</option>
-                        <option value="apellido">Apellido</option>
-                        <option value="sexo">Sexo</option>
-                        <option value="sueldo">Sueldo</option>
-                    </select>
+                    <label for="buscar_empleado">Buscar Empleado:</label>
+                    <div class="search-container">
+                        <input type="text" id="buscar_empleado" name="buscar_empleado" placeholder="Escriba el nombre del empleado..." autocomplete="off">
+                        <div id="search-results" class="search-results" style="display: none;"></div>
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="nuevo_valor">Nuevo Valor:</label>
-                    <input type="text" id="nuevo_valor" name="nuevo_valor" required>
+                    <label for="empleado_seleccionado">Empleado Seleccionado:</label>
+                    <input type="text" id="empleado_seleccionado" name="empleado_seleccionado" readonly>
+                    <input type="hidden" id="empleado_id" name="empleado_id">
                 </div>
 
                 <div class="form-group">
-                    <label for="condicion_campo">Condición (Campo):</label>
-                    <select id="condicion_campo" name="condicion_campo" required>
-                        <option value="">Seleccione campo</option>
-                        <option value="nombre">Nombre</option>
-                        <option value="apellido">Apellido</option>
-                        <option value="sexo">Sexo</option>
-                        <option value="sueldo">Sueldo</option>
-                    </select>
+                    <label for="nuevo_sueldo">Nuevo Sueldo:</label>
+                    <input type="number" id="nuevo_sueldo" name="nuevo_sueldo" step="0.01" min="0" required>
                 </div>
 
-                <div class="form-group">
-                    <label for="condicion_valor">Condición (Valor):</label>
-                    <input type="text" id="condicion_valor" name="condicion_valor" required>
-                </div>
-
-                <button type="submit" class="btn-submit">Modificar Empleado</button>
+                <button type="submit" class="btn-submit">Actualizar Sueldo</button>
             </form>
         </div>
 
@@ -158,6 +145,89 @@
             buttons.forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
         }
+
+        // Funcionalidad de búsqueda en tiempo real
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('buscar_empleado');
+            const searchResults = document.getElementById('search-results');
+            const empleadoSeleccionado = document.getElementById('empleado_seleccionado');
+            const empleadoId = document.getElementById('empleado_id');
+            let searchTimeout;
+
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    const query = this.value.trim();
+                    
+                    // Limpiar timeout anterior
+                    clearTimeout(searchTimeout);
+                    
+                    // Ocultar resultados si no hay consulta
+                    if (query.length < 2) {
+                        searchResults.style.display = 'none';
+                        return;
+                    }
+
+                    // Buscar después de 300ms de inactividad
+                    searchTimeout = setTimeout(() => {
+                        buscarEmpleados(query);
+                    }, 300);
+                });
+
+                // Ocultar resultados al hacer clic fuera
+                document.addEventListener('click', function(e) {
+                    if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+                        searchResults.style.display = 'none';
+                    }
+                });
+            }
+
+            function buscarEmpleados(query) {
+                // Crear formulario temporal para enviar datos
+                const formData = new FormData();
+                formData.append('action', 'buscar');
+                formData.append('query', query);
+
+                fetch('actualizar.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    mostrarResultados(data);
+                })
+                .catch(error => {
+                    console.error('Error en la búsqueda:', error);
+                });
+            }
+
+            function mostrarResultados(empleados) {
+                searchResults.innerHTML = '';
+                
+                if (empleados.length === 0) {
+                    searchResults.innerHTML = '<div class="search-result-item">No se encontraron empleados</div>';
+                } else {
+                    empleados.forEach(empleado => {
+                        const item = document.createElement('div');
+                        item.className = 'search-result-item';
+                        item.innerHTML = `
+                            <div class="employee-name">${empleado.nombre} ${empleado.apellido}</div>
+                            <div class="employee-details">Sueldo actual: $${empleado.sueldo} | Sexo: ${empleado.sexo}</div>
+                        `;
+                        
+                        item.addEventListener('click', function() {
+                            empleadoSeleccionado.value = `${empleado.nombre} ${empleado.apellido}`;
+                            empleadoId.value = empleado.id;
+                            searchInput.value = `${empleado.nombre} ${empleado.apellido}`;
+                            searchResults.style.display = 'none';
+                        });
+                        
+                        searchResults.appendChild(item);
+                    });
+                }
+                
+                searchResults.style.display = 'block';
+            }
+        });
     </script>
 </body>
 </html>
