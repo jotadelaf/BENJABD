@@ -1,57 +1,66 @@
+<?php
+// Incluir archivo de conexión
+require_once 'conexion.php';
+
+// Verificar si se envió el formulario
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    
+    // Obtener los datos del formulario
+    $nombre = $_POST['nombre'];
+    $apellido = $_POST['apellido'];
+    $sexo = $_POST['sexo'];
+    $sueldo = $_POST['sueldo'];
+    
+    // Conectar a la base de datos
+    $conexion = conectarBD();
+    
+    // Verificar si la conexión fue exitosa
+    if (!$conexion) {
+        $mensaje = "Error de conexión a la base de datos";
+        $tipo = "error";
+    } else {
+        // Insertar el empleado usando el procedimiento almacenado
+        $sql = "CALL InsertaEmpleado(?, ?, ?, ?)";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bind_param("sssd", $nombre, $apellido, $sexo, $sueldo);
+        
+        // Ejecutar la consulta
+        if ($stmt->execute()) {
+            $mensaje = "Empleado registrado exitosamente";
+            $tipo = "success";
+        } else {
+            $mensaje = "Error al registrar empleado: " . $stmt->error;
+            $tipo = "error";
+        }
+        
+        // Cerrar conexión
+        $stmt->close();
+        cerrarConexion($conexion);
+    }
+} else {
+    $mensaje = "Acceso no permitido";
+    $tipo = "error";
+}
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Empleados</title>
+    <title>Registrar Empleado</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Registro de Empleados</h1>
+        <h1>Registrar Empleado</h1>
         
-        <?php
-        // Configuración de la base de datos
-        $servername = "localhost";
-        $username = "root"; // Cambia si tu usuario de MySQL es diferente
-        $password = "";    // Cambia si tu contraseña de MySQL es diferente
-        $dbname = "bdelafuente";
-
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $nombre = $_POST['nombre'] ?? '';
-            $apellido = $_POST['apellido'] ?? '';
-            $sexo = $_POST['sexo'] ?? '';
-            $sueldo = isset($_POST['sueldo']) ? (int)$_POST['sueldo'] : 0;
-
-            // Validación básica
-            if ($nombre && $apellido && $sexo && $sueldo !== '') {
-                // Crear conexión
-                $conn = new mysqli($servername, $username, $password, $dbname);
-                if ($conn->connect_error) {
-                    echo '<div class="message error">Conexión fallida: ' . $conn->connect_error . '</div>';
-                } else {
-                    // Preparar y ejecutar el procedimiento almacenado
-                    $stmt = $conn->prepare("CALL InsertaEmpleado(?, ?, ?, ?)");
-                    $stmt->bind_param("sssi", $nombre, $apellido, $sexo, $sueldo);
-                    
-                    if ($stmt->execute()) {
-                        echo '<div class="message success">¡Registro insertado correctamente!</div>';
-                    } else {
-                        echo '<div class="message error">Error al insertar: ' . $stmt->error . '</div>';
-                    }
-                    $stmt->close();
-                    $conn->close();
-                }
-            } else {
-                echo '<div class="message warning">Por favor, complete todos los campos.</div>';
-            }
-        } else {
-            echo '<div class="message error">Método de solicitud no válido.</div>';
-        }
-        ?>
+        <div class="message <?php echo $tipo; ?>">
+            <?php echo $mensaje; ?>
+        </div>
         
         <div style="text-align: center; margin-top: 20px;">
-            <a href="inicio.html" class="btn-submit" style="text-decoration: none; display: inline-block; padding: 12px 24px;">Volver al Formulario</a>
+            <a href="inicio.html" class="btn-submit" style="text-decoration: none; display: inline-block; padding: 12px 24px;">Volver al Sistema</a>
         </div>
     </div>
 </body>

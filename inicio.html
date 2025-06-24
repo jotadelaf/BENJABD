@@ -142,20 +142,21 @@
     </div>
 
     <script>
+        // Función para mostrar diferentes formularios
         function showForm(formId) {
             // Ocultar todos los formularios
-            const forms = document.querySelectorAll('.form-section');
-            forms.forEach(form => form.classList.remove('active'));
+            const formularios = document.querySelectorAll('.form-section');
+            formularios.forEach(form => form.classList.remove('active'));
             
             // Mostrar el formulario seleccionado
             document.getElementById(formId).classList.add('active');
             
             // Actualizar botones de navegación
-            const buttons = document.querySelectorAll('.nav-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
+            const botones = document.querySelectorAll('.nav-btn');
+            botones.forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
 
-            // Cargar empleados automáticamente según el formulario
+            // Cargar empleados automáticamente
             if (formId === 'listar1') {
                 cargarTodosLosEmpleados();
             } else if (formId === 'listar2') {
@@ -163,76 +164,66 @@
             }
         }
 
-        // Funciones para cargar empleados
+        // Función para cargar todos los empleados
         function cargarTodosLosEmpleados() {
-            const listaContainer = document.getElementById('lista-empleados-todos');
-            if (!listaContainer) {
-                return;
-            }
+            const contenedor = document.getElementById('lista-empleados-todos');
+            if (!contenedor) return;
 
-            // Mostrar indicador de carga
-            listaContainer.innerHTML = '<div class="no-resultados">Cargando empleados...</div>';
+            // Mostrar mensaje de carga
+            contenedor.innerHTML = '<div class="no-resultados">Cargando empleados...</div>';
 
-            // Usar fetch para la petición AJAX
-            const formData = new FormData();
-            formData.append('action', 'listar_todos');
-
+            // Hacer petición al servidor
             fetch('listar1.php', {
                 method: 'POST',
-                body: formData
+                body: new FormData()
             })
             .then(response => response.text())
             .then(data => {
-                listaContainer.innerHTML = data;
+                contenedor.innerHTML = data;
             })
             .catch(error => {
-                console.error('Error al cargar empleados:', error);
-                listaContainer.innerHTML = '<div class="no-resultados">Error al cargar los empleados</div>';
+                contenedor.innerHTML = '<div class="no-resultados">Error al cargar los empleados</div>';
             });
         }
 
+        // Función para cargar empleados filtrados
         function cargarEmpleadosFiltrados() {
-            const filtroSexo = document.getElementById('filtro_sexo').value;
-            const listaContainer = document.getElementById('lista-empleados-filtrados');
-            if (!listaContainer) {
-                return;
-            }
+            const filtro = document.getElementById('filtro_sexo').value;
+            const contenedor = document.getElementById('lista-empleados-filtrados');
+            if (!contenedor) return;
 
             // Si no hay filtro seleccionado, limpiar la lista
-            if (!filtroSexo || filtroSexo === '') {
-                listaContainer.innerHTML = '';
+            if (!filtro || filtro === '') {
+                contenedor.innerHTML = '';
                 return;
             }
 
-            // Mostrar indicador de carga
-            listaContainer.innerHTML = '<div class="no-resultados">Cargando empleados...</div>';
+            // Mostrar mensaje de carga
+            contenedor.innerHTML = '<div class="no-resultados">Cargando empleados...</div>';
 
-            // Usar fetch para la petición AJAX
-            const formData = new FormData();
-            formData.append('action', 'listar_filtrados');
-            formData.append('filtro_sexo', filtroSexo);
+            // Preparar datos para enviar
+            const datos = new FormData();
+            datos.append('filtro_sexo', filtro);
 
+            // Hacer petición al servidor
             fetch('listar2.php', {
                 method: 'POST',
-                body: formData
+                body: datos
             })
             .then(response => response.text())
             .then(data => {
-                listaContainer.innerHTML = data;
+                contenedor.innerHTML = data;
             })
             .catch(error => {
-                console.error('Error al cargar empleados filtrados:', error);
-                listaContainer.innerHTML = '<div class="no-resultados">Error al cargar los empleados</div>';
+                contenedor.innerHTML = '<div class="no-resultados">Error al cargar los empleados</div>';
             });
         }
 
-        // Evento para el filtro por sexo
+        // Evento para cambiar filtro de sexo
         document.addEventListener('DOMContentLoaded', function() {
             const filtroSexo = document.getElementById('filtro_sexo');
             if (filtroSexo) {
-                filtroSexo.addEventListener('change', function() {
-                    cargarEmpleadosFiltrados();
-                });
+                filtroSexo.addEventListener('change', cargarEmpleadosFiltrados);
             }
         });
     </script>

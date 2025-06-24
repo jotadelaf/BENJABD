@@ -1,3 +1,46 @@
+<?php
+// Incluir archivo de conexión
+require_once 'conexion.php';
+
+// Verificar si se envió el formulario
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    
+    // Obtener los datos del formulario
+    $campo_eliminar = $_POST['campo_eliminar'];
+    $valor_eliminar = $_POST['valor_eliminar'];
+    
+    // Conectar a la base de datos
+    $conexion = conectarBD();
+    
+    // Verificar si la conexión fue exitosa
+    if (!$conexion) {
+        $mensaje = "Error de conexión a la base de datos";
+        $tipo = "error";
+    } else {
+        // Eliminar el empleado usando el procedimiento almacenado
+        $sql = "CALL EliminarEmpleado(?, ?)";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bind_param("ss", $campo_eliminar, $valor_eliminar);
+        
+        // Ejecutar la consulta
+        if ($stmt->execute()) {
+            $mensaje = "Empleado eliminado exitosamente";
+            $tipo = "success";
+        } else {
+            $mensaje = "Error al eliminar empleado: " . $stmt->error;
+            $tipo = "error";
+        }
+        
+        // Cerrar conexión
+        $stmt->close();
+        cerrarConexion($conexion);
+    }
+} else {
+    $mensaje = "Acceso no permitido";
+    $tipo = "error";
+}
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -10,48 +53,9 @@
     <div class="container">
         <h1>Eliminar Empleado</h1>
         
-        <?php
-        // Configuración de la base de datos
-        $servername = "localhost";
-        $username = "root";
-        $password = "";
-        $dbname = "bdelafuente";
-
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $campo_eliminar = $_POST['campo_eliminar'] ?? '';
-            $valor_eliminar = $_POST['valor_eliminar'] ?? '';
-
-            // Validación básica
-            if ($campo_eliminar && $valor_eliminar !== '') {
-                // Crear conexión
-                $conn = new mysqli($servername, $username, $password, $dbname);
-                if ($conn->connect_error) {
-                    echo '<div class="message error">Conexión fallida: ' . $conn->connect_error . '</div>';
-                } else {
-                    // Preparar y ejecutar el procedimiento almacenado
-                    $stmt = $conn->prepare("CALL EliminarEmpleado(?, ?)");
-                    $stmt->bind_param("ss", $campo_eliminar, $valor_eliminar);
-                    
-                    if ($stmt->execute()) {
-                        $affected_rows = $stmt->affected_rows;
-                        if ($affected_rows > 0) {
-                            echo '<div class="message success">¡Empleado(s) eliminado(s) correctamente! Registros eliminados: ' . $affected_rows . '</div>';
-                        } else {
-                            echo '<div class="message warning">No se encontraron registros que coincidan con la condición especificada.</div>';
-                        }
-                    } else {
-                        echo '<div class="message error">Error al eliminar: ' . $stmt->error . '</div>';
-                    }
-                    $stmt->close();
-                    $conn->close();
-                }
-            } else {
-                echo '<div class="message warning">Por favor, complete todos los campos.</div>';
-            }
-        } else {
-            echo '<div class="message error">Método de solicitud no válido.</div>';
-        }
-        ?>
+        <div class="message <?php echo $tipo; ?>">
+            <?php echo $mensaje; ?>
+        </div>
         
         <div style="text-align: center; margin-top: 20px;">
             <a href="inicio.html" class="btn-submit" style="text-decoration: none; display: inline-block; padding: 12px 24px;">Volver al Sistema</a>
